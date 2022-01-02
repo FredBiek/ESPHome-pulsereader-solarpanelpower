@@ -1,1 +1,50 @@
+esphome:
+  name: esp-energy-measure
+  platform: ESP32
+  board: esp32dev
 
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+  password: "xxxxxxxxxxxxxxxxxxxx"
+
+wifi:
+  ssid: "xxxxxxxxx"
+  password: "xxxxxxxxx"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Esp-Energy-Measure"
+    password: "xxxxxxxxxxxxx"
+
+captive_portal:
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: ESP Puls Inp IP Address
+    ssid:
+      name: ESP Puls Inp SSID
+    bssid:
+      name: ESP Puls Inp BSSID
+    mac_address:
+      name: ESP Puls Inp Mac Wifi Address
+
+sensor:
+- platform: pulse_counter
+  pin: 12
+  unit_of_measurement: 'kW'
+  name: 'Solar Panel Power'
+  filters:
+    - multiply: 0.03  # (60s/2000 pulses per kWh)
+
+  total:
+    unit_of_measurement: 'kWh'
+    name: 'Solar Panel Energy'
+    accuracy_decimals: 2
+    filters:
+      - multiply: 0.0005  # (1/2000 pulses per kWh)
